@@ -155,6 +155,72 @@ python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_VERSION`
 
+## VLM API Key 配置
+
+这个包装脚本支持两类视觉模型接入方式：
+
+- OpenAI 兼容接口
+- Azure OpenAI
+
+### OpenAI 兼容接口
+
+需要设置这些变量：
+
+```bash
+OPENAI_API_KEY=your_key_here
+OPENAI_BASE_URL=https://your-provider.example/v1
+MARKITDOWN_LLM_MODEL=your-vision-model
+MARKITDOWN_ENABLE_OCR=1
+```
+
+然后执行：
+
+```bash
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+### OpenRouter 示例
+
+```bash
+OPENAI_API_KEY=your_openrouter_key
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+MARKITDOWN_LLM_MODEL=your-vision-model
+MARKITDOWN_ENABLE_OCR=1
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+注意：
+
+- 模型本身必须支持图片输入
+- 免费模型在图片较多的批处理场景下很容易触发限流
+- 即使某些兼容接口不严格校验，也建议 `OPENAI_API_KEY` 保持非空
+
+### Azure OpenAI
+
+```bash
+MARKITDOWN_LLM_PROVIDER=azure-openai
+AZURE_OPENAI_API_KEY=your_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_API_VERSION=2024-10-21
+MARKITDOWN_LLM_MODEL=your_deployment_name
+MARKITDOWN_ENABLE_OCR=1
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+### 可选的 provider 显式指定
+
+你也可以手动指定 provider：
+
+```bash
+MARKITDOWN_LLM_PROVIDER=openai
+```
+
+或者：
+
+```bash
+MARKITDOWN_LLM_PROVIDER=azure-openai
+```
+
 ## 发布到 GitHub
 
 ```bash

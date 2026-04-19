@@ -149,6 +149,69 @@ Main variables:
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_VERSION`
 
+## VLM API Key Configuration
+
+The wrapper supports vision-capable LLMs through either an OpenAI-compatible API or Azure OpenAI.
+
+### OpenAI-compatible providers
+
+Set these variables:
+
+```bash
+OPENAI_API_KEY=your_key_here
+OPENAI_BASE_URL=https://your-provider.example/v1
+MARKITDOWN_LLM_MODEL=your-vision-model
+MARKITDOWN_ENABLE_OCR=1
+```
+
+Then run:
+
+```bash
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+### OpenRouter example
+
+```bash
+OPENAI_API_KEY=your_openrouter_key
+OPENAI_BASE_URL=https://openrouter.ai/api/v1
+MARKITDOWN_LLM_MODEL=your-vision-model
+MARKITDOWN_ENABLE_OCR=1
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+Important:
+
+- the selected model must support image input
+- free models may hit aggressive rate limits during image-heavy batch runs
+- if your endpoint ignores auth, `OPENAI_API_KEY` still needs a non-empty placeholder value
+
+### Azure OpenAI
+
+```bash
+MARKITDOWN_LLM_PROVIDER=azure-openai
+AZURE_OPENAI_API_KEY=your_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_API_VERSION=2024-10-21
+MARKITDOWN_LLM_MODEL=your_deployment_name
+MARKITDOWN_ENABLE_OCR=1
+python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
+```
+
+### Optional provider selection
+
+You can also set the provider explicitly:
+
+```bash
+MARKITDOWN_LLM_PROVIDER=openai
+```
+
+or:
+
+```bash
+MARKITDOWN_LLM_PROVIDER=azure-openai
+```
+
 ## Publishing To GitHub
 
 ```bash
