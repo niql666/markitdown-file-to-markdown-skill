@@ -1,22 +1,28 @@
-# MarkItDown File To Markdown Skill
+# MarkItDown 文件转 Markdown 技能
 
-[中文说明](README.zh-CN.md)
+这是一个基于 [Microsoft MarkItDown](https://github.com/microsoft/markitdown) 的 Codex 技能与包装脚本，用来把本地文件批量转换成 Markdown。
 
-Codex skill and wrapper script for converting local files to Markdown with [Microsoft MarkItDown](https://github.com/microsoft/markitdown).
+仓库里包含三部分核心内容：
 
-This repository packages the skill definition, setup notes, and a Python wrapper that adds:
+- `SKILL.md`：Codex 技能定义
+- `scripts/run_markitdown.py`：增强版包装脚本
+- `references/setup.md`：安装与配置说明
 
-- automatic runtime detection for Python environments that already have `markitdown`
-- recursive directory conversion with preserved relative paths
-- optional OCR / VLM support through OpenAI-compatible or Azure OpenAI clients
-- batch conversion options such as `--skip-errors` and per-file timeouts
+这个包装脚本在原始 `markitdown` 能力之外，还补充了：
 
-## Repository Layout
+- 自动寻找已安装 `markitdown` 的 Python 运行时
+- 递归处理目录，并保持相对目录结构
+- 支持批量转换、跳过错误、单文件超时
+- 可选接入 OCR 和 VLM
+- 支持 OpenAI 兼容接口和 Azure OpenAI
+
+## 目录结构
 
 ```text
 markitdown-file-to-markdown-skill/
 ├── SKILL.md
 ├── README.md
+├── README.zh-CN.md
 ├── LICENSE
 ├── .gitignore
 ├── .env.example
@@ -28,18 +34,18 @@ markitdown-file-to-markdown-skill/
     └── run_markitdown.py
 ```
 
-## What It Supports
+## 支持的能力
 
-- PDF, Word, Excel, PowerPoint
-- HTML, CSV, JSON, XML, EPUB, ZIP
-- image files such as JPG, JPEG, PNG
-- optional OCR and image description with a vision-capable model
+- PDF、Word、Excel、PowerPoint
+- HTML、CSV、JSON、XML、EPUB、ZIP
+- JPG、JPEG、PNG 等图片文件
+- 可选 OCR 和图片描述
 
-The exact supported file types still depend on the installed MarkItDown build and plugins.
+实际可转换格式仍取决于本地安装的 MarkItDown 版本与插件。
 
-## Install
+## 安装
 
-Create an isolated Python environment and install dependencies:
+建议使用独立 Python 虚拟环境：
 
 ```bash
 python3.11 -m venv ~/.venvs/markitdown
@@ -47,49 +53,49 @@ python3.11 -m venv ~/.venvs/markitdown
 ~/.venvs/markitdown/bin/pip install "markitdown[all]" openai markitdown-ocr
 ```
 
-Verify:
+验证安装：
 
 ```bash
 ~/.venvs/markitdown/bin/markitdown --help
 ~/.venvs/markitdown/bin/python -c "import markitdown, openai, markitdown_ocr"
 ```
 
-## Use As A Codex Skill
+## 作为 Codex 技能使用
 
-Copy or symlink this directory into your Codex skills directory:
+把仓库复制或软链接到 `~/.codex/skills`：
 
 ```bash
 mkdir -p ~/.codex/skills
 ln -s /absolute/path/to/markitdown-file-to-markdown-skill ~/.codex/skills/markitdown-file-to-markdown
 ```
 
-Or copy it directly:
+或者直接复制：
 
 ```bash
 cp -R /absolute/path/to/markitdown-file-to-markdown-skill ~/.codex/skills/markitdown-file-to-markdown
 ```
 
-## Wrapper Examples
+## 用法示例
 
-Single file:
+单文件转换：
 
 ```bash
 python3 scripts/run_markitdown.py /absolute/path/input.pdf
 ```
 
-Single file with explicit output:
+指定输出文件：
 
 ```bash
 python3 scripts/run_markitdown.py /absolute/path/input.docx --output /absolute/path/output.md
 ```
 
-Recursive conversion with preserved structure:
+递归处理目录并保持结构：
 
 ```bash
 python3 scripts/run_markitdown.py /absolute/path/in-dir --recursive --output-dir /absolute/path/out-dir
 ```
 
-Recursive conversion with explicit filters:
+按扩展名过滤并跳过错误：
 
 ```bash
 python3 scripts/run_markitdown.py \
@@ -102,7 +108,7 @@ python3 scripts/run_markitdown.py \
   --skip-errors
 ```
 
-Enable OCR with an OpenAI-compatible endpoint:
+启用 OCR：
 
 ```bash
 OPENAI_API_KEY=your_key_here \
@@ -111,7 +117,7 @@ MARKITDOWN_ENABLE_OCR=1 \
 python3 scripts/run_markitdown.py /absolute/path/scanned.pdf
 ```
 
-Use a compatible base URL:
+使用 OpenAI 兼容接口：
 
 ```bash
 OPENAI_API_KEY=placeholder \
@@ -120,7 +126,7 @@ MARKITDOWN_LLM_MODEL=my-vision-model \
 python3 scripts/run_markitdown.py /absolute/path/slides.pptx --use-plugins
 ```
 
-Use Azure OpenAI:
+使用 Azure OpenAI：
 
 ```bash
 MARKITDOWN_LLM_PROVIDER=azure-openai \
@@ -131,11 +137,11 @@ MARKITDOWN_LLM_MODEL=gpt-4o \
 python3 scripts/run_markitdown.py /absolute/path/file.pdf --enable-ocr
 ```
 
-## Environment Variables
+## 环境变量
 
-See [.env.example](.env.example) and [references/setup.md](references/setup.md).
+参考 [.env.example](.env.example) 和 [references/setup.md](references/setup.md)。
 
-Main variables:
+主要变量有：
 
 - `MARKITDOWN_PYTHON`
 - `MARKITDOWN_LLM_PROVIDER`
@@ -149,7 +155,7 @@ Main variables:
 - `AZURE_OPENAI_ENDPOINT`
 - `AZURE_OPENAI_API_VERSION`
 
-## Publishing To GitHub
+## 发布到 GitHub
 
 ```bash
 git init
@@ -160,12 +166,12 @@ git remote add origin <your-github-repo-url>
 git push -u origin main
 ```
 
-## Notes
+## 说明
 
-- This repository does not include real API keys or personal shell configuration.
-- Free OpenAI-compatible vision endpoints may rate limit heavily when converting image-heavy batches.
-- Large PPT/PDF conversions can be slow; use `--skip-errors` and `--timeout-seconds` for long directory runs.
+- 仓库中不包含真实 API key 或个人 shell 配置
+- 免费视觉模型在图片很多时很容易触发限流
+- 大型 PPT / PDF 批处理时建议配合 `--skip-errors` 和 `--timeout-seconds`
 
-## License
+## 许可证
 
 MIT
