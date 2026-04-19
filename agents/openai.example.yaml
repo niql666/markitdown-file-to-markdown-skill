@@ -1,0 +1,4 @@
+interface:
+  display_name: "MarkItDown"
+  short_description: "Convert many document formats to Markdown"
+  default_prompt: "Use Microsoft MarkItDown to convert the target local files into Markdown and save the outputs."
